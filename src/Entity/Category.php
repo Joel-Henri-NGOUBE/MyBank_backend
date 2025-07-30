@@ -12,7 +12,7 @@ namespace App\Entity;
 
 enum Category: string{
     case Tax = "TAX";
-    case Subscription = "SUBSSCRIPTION";
+    case Subscription = "SUBSCRIPTION";
     case Payment = "PAYMENT";
     case Courses = "COURSES";
     case Salary = "SALARY";
@@ -34,3 +34,4 @@ enum Category: string{
     case Leisure = "LEISURE";
     case Saving = "SAVING";
 }
+

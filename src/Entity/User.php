@@ -4,46 +4,102 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Post;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Metadata\Link;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[ApiResource(
+    normalizationContext: ['groups' => ['read']],
+    denormalizationContext: ['groups' => ['write']],
+)]
+// #[ApiResource(
+// operations: [
+//         new Post(
+//             uriTemplate: '/users', 
+//             // uriVariables: [
+//             //     "id" => new Link(fromClass: User::class)], 
+//             name: "api_create_user"
+//         ),
+//         new Get(
+//             uriTemplate: '/users/{id}', 
+//             uriVariables: [
+//                 "id" => new Link(fromClass: User::class), 
+//                 // "id" => new Link(fromClass: Operations::class)
+//             ], 
+//             name: "api_retrieve_user"
+//         ),
+//         // // new GetCollection(uriTemplate: '/users', uriVariables: ["id" => new Link(fromClass: User::class)], name: "api_create_user"),
+//         // // new Post(uriTemplate: '/users', uriVariables: ["id" => new Link(fromClass: User::class, toClass: Operations::class, fromProperty: "operations")], name: "api_create_user"),
+//         new Patch(
+//             uriTemplate: '/users/{id}', 
+//             uriVariables: [
+//                 "id" => new Link(fromClass: User::class), 
+//                 // "id" => new Link(fromClass: Operations::class)
+//             ], 
+//             name: "api_set_user"
+//         ),
+//         new Delete(
+//             uriTemplate: '/users/{id}', 
+//             uriVariables: [
+//                 "id" => new Link(fromClass: User::class), 
+//                 // "id" => new Link(fromClass: Operations::class)
+//             ], 
+//             name: "api_delete_user"
+//         ),
+//         // // new Get(uriTemplate: '/users/{id}/{id}', controller: GetWeather::class),
+//         // // new GetCollection(),
+//     ]
+// )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["read", "write"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Groups(["read", "write"])]
     private ?string $email = null;
 
     /**
      * @var list<string> The user roles
      */
     #[ORM\Column]
+    #[Groups(["read", "write"])]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Groups(["read", "write"])]
     private ?string $password = null;
 
     /**
      * @var Collection<int, Operations>
      */
-    #[ORM\OneToMany(targetEntity: Operations::class, mappedBy: 'user')]
+    #[ORM\OneToMany(targetEntity: Operations::class, mappedBy: 'user', orphanRemoval: true)]
+    #[Link(fromClass: Operation::class, toProperty: 'operations')]
+    // #[ApiSubResource]
+    #[Groups(["read", "write"])]
     private Collection $operations;
 
     public function __construct()
     {
         $this->operations = new ArrayCollection();
     }
-
+    // #[ApiProperty(identifier: true)]
     public function getId(): ?int
     {
         return $this->id;
@@ -137,7 +193,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->operations->contains($operation)) {
             $this->operations->add($operation);
-            $operation->setIdUser($this);
+            $operation->setUser($this);
         }
 
         return $this;
@@ -147,8 +203,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->operations->removeElement($operation)) {
             // set the owning side to null (unless already changed)
-            if ($operation->getIdUser() === $this) {
-                $operation->setIdUser(null);
+            if ($operation->getUser() === $this) {
+                $operation->setUser(null);
             }
         }
 
