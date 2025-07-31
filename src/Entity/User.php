@@ -22,44 +22,6 @@ use ApiPlatform\Metadata\Link;
     normalizationContext: ['groups' => ['read']],
     denormalizationContext: ['groups' => ['write']],
 )]
-// #[ApiResource(
-// operations: [
-//         new Post(
-//             uriTemplate: '/users', 
-//             // uriVariables: [
-//             //     "id" => new Link(fromClass: User::class)], 
-//             name: "api_create_user"
-//         ),
-//         new Get(
-//             uriTemplate: '/users/{id}', 
-//             uriVariables: [
-//                 "id" => new Link(fromClass: User::class), 
-//                 // "id" => new Link(fromClass: Operations::class)
-//             ], 
-//             name: "api_retrieve_user"
-//         ),
-//         // // new GetCollection(uriTemplate: '/users', uriVariables: ["id" => new Link(fromClass: User::class)], name: "api_create_user"),
-//         // // new Post(uriTemplate: '/users', uriVariables: ["id" => new Link(fromClass: User::class, toClass: Operations::class, fromProperty: "operations")], name: "api_create_user"),
-//         new Patch(
-//             uriTemplate: '/users/{id}', 
-//             uriVariables: [
-//                 "id" => new Link(fromClass: User::class), 
-//                 // "id" => new Link(fromClass: Operations::class)
-//             ], 
-//             name: "api_set_user"
-//         ),
-//         new Delete(
-//             uriTemplate: '/users/{id}', 
-//             uriVariables: [
-//                 "id" => new Link(fromClass: User::class), 
-//                 // "id" => new Link(fromClass: Operations::class)
-//             ], 
-//             name: "api_delete_user"
-//         ),
-//         // // new Get(uriTemplate: '/users/{id}/{id}', controller: GetWeather::class),
-//         // // new GetCollection(),
-//     ]
-// )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -91,7 +53,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: Operations::class, mappedBy: 'user', orphanRemoval: true)]
     #[Link(fromClass: Operation::class, toProperty: 'operations')]
-    // #[ApiSubResource]
     #[Groups(["read", "write"])]
     private Collection $operations;
 
@@ -99,7 +60,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->operations = new ArrayCollection();
     }
-    // #[ApiProperty(identifier: true)]
     public function getId(): ?int
     {
         return $this->id;

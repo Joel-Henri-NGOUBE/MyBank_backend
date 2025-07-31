@@ -40,18 +40,4 @@ class SignUpController extends AbstractController
             ->setStatusCode(200);
     }
 
-    // #[Route('/dance', name: 'dance', methods: ["GET"])]
-    // public function dance(Request $request): Response
-    // {
-    //     // return $this->render('sign_up/index.html.twig', [
-    //     //     'controller_name' => 'SignUpController',
-    //     // ]);
-    //     // $bonjour = "bonjour";
-    //     // return new JsonResponse(["request" => $request, "bonjour" => $bonjour]);
-    //     // return $this->render('sign_up/index.html.twig', [
-    //     //     'controller_name' => 'SignUpController', "hey" => $request->attributes->get("hey")
-    //     // ]);
-    //     dd($request);
-    //     // return new JsonResponse(["request" => $request->getPayload()]);
-    // }
 }

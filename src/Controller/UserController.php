@@ -16,4 +16,5 @@ final class UserController extends AbstractController
         $payload = $request->getPayload()->all();
         return $this->json(["id" => $userRepository->findOneByEmailField($payload["email"])->getId()]);
     }
+
 }

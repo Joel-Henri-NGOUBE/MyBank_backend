@@ -2,14 +2,6 @@
 
 namespace App\Entity;
 
-// use Tlr\Phpnum\Enum;
-
-// class Category extends Enum {
-//     public const TAX = "TAX";
-//     public const Subscription = "SUBSSCRIPTION";
-//     public const Payment = "PAYMENT";
-// }
-
 enum Category: string{
     case Tax = "TAX";
     case Subscription = "SUBSCRIPTION";

@@ -13,18 +13,8 @@ use App\Entity\Category;
 use App\Entity\Type;
 use ApiPlatform\Metadata\UriVariable;
 
-// require("utilsFunctions.php");
-
 final class CreateOperationController extends AbstractController
 {
-    // #[Route('/users/{user_id}/operations')]
-    // public function index(Request $request, EntityManagerInterface $em, $user_id, $id): Response
-    // {
-    //     // return $this->render('create_operation/index.html.twig', [
-    //     //     'controller_name' => 'CreateOperationController',
-    //     // ]);
-    //     dd($user_id, $id, $request->getPayload->all());
-    // }
     public function __invoke($user_id, Request $request, UserRepository $userRepository, EntityManagerInterface $em){
         $payload = $request->getPayload()->all();
         $newOperation = new Operations();
@@ -34,7 +24,6 @@ final class CreateOperationController extends AbstractController
         $newOperation->setAmount($payload["amount"]);
         $userRepository->findOneByIdField($user_id)->addOperation($newOperation);
         $em->persist($newOperation);
-        // dd($newOperation, $userRepository->findOneByIdField($user_id));
         $em->flush();
 
         return $this->json(["message" => "Operation created"]);
