@@ -7,7 +7,7 @@ use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 
 // use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-final class CreateOperationControllerTest extends ApiTestCase
+final class UpdateOperationTest extends ApiTestCase
 {
     public function testIndex(): void
     {
@@ -16,7 +16,7 @@ final class CreateOperationControllerTest extends ApiTestCase
         $container = self::getContainer();
 
         $user = new User();
-        $user->setEmail('this3@gmail.com');
+        $user->setEmail('this5@gmail.com');
         $user->setPassword(
             $container->get('security.user_password_hasher')->hashPassword($user, 'password')
         );
@@ -27,7 +27,7 @@ final class CreateOperationControllerTest extends ApiTestCase
         $response1 = $client->request('POST', '/api/login_check', [
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [
-                'email' => 'this3@gmail.com',
+                'email' => 'this5@gmail.com',
                 'password' => 'password', 
         ]]);
 
@@ -40,7 +40,7 @@ final class CreateOperationControllerTest extends ApiTestCase
                 "Authorization" => "Bearer ". $token
             ],
             'json' => [
-                'email' => 'this3@gmail.com',
+                'email' => 'this5@gmail.com',
             ]
             
         ]);
@@ -53,7 +53,7 @@ final class CreateOperationControllerTest extends ApiTestCase
             ]
         ]);
 
-        self::assertCount(0, $response3->toArray()["member"]);
+        // self::assertCount(0, $response3->toArray()["member"]);
 
         $response4 = $client->request('POST', "/api/users/$id/operations", [
             'headers' => [
@@ -67,11 +67,11 @@ final class CreateOperationControllerTest extends ApiTestCase
                 "category" => "TAX"
             ]
         ]);
-        $json3 = $response4->toArray();
+        // $json3 = $response4->toArray();
         // self::assert();
-        self::assertResponseIsSuccessful();
-        $this->assertArrayHasKey('message', $json3);
-        $this->assertEquals("Operation created", $json3["message"]);
+        // self::assertResponseIsSuccessful();
+        // $this->assertArrayHasKey('message', $json3);
+        // $this->assertEquals("Operation created", $json3["message"]);
 
         $response5 = $client->request('GET', "api/users/$id/operations", [
             "headers" => [
@@ -79,7 +79,29 @@ final class CreateOperationControllerTest extends ApiTestCase
             ]
         ]);
 
-        self::assertCount(1, $response5->toArray()["member"]);
+        $operation = $response5->toArray()["member"][0];
+
+        self::assertEquals("PAIEMENT DES TAXES FONCIERES SAS\nREF:FR2025:48:456355:34334:34", $operation["label"]);
+
+        $client->request('PATCH', "/api/users/$id/operations/" . $operation["id"], [
+            'headers' => [
+                'Content-Type' => 'application/merge-patch+json',
+                "Authorization" => "Bearer $token"
+            ],  
+            "json" => [            
+                "label" => "PAIEMENT DES TAXES FONCIERES",
+            ]
+        ]);
+
+        $response6 = $client->request('GET', "api/users/$id/operations/" . $operation["id"], [
+            "headers" => [
+                "Authorization" => "Bearer $token"
+            ]
+        ])->toArray();
+
+        var_dump($response6);
+
+        self::assertEquals("PAIEMENT DES TAXES FONCIERES", $response6["label"]);
 
 
     }

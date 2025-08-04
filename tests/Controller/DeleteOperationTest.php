@@ -5,9 +5,7 @@ namespace App\Tests\Controller;
 use App\Entity\User;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 
-// use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-final class CreateOperationControllerTest extends ApiTestCase
+final class DeleteOperationTest extends ApiTestCase
 {
     public function testIndex(): void
     {
@@ -16,7 +14,7 @@ final class CreateOperationControllerTest extends ApiTestCase
         $container = self::getContainer();
 
         $user = new User();
-        $user->setEmail('this3@gmail.com');
+        $user->setEmail('this6@gmail.com');
         $user->setPassword(
             $container->get('security.user_password_hasher')->hashPassword($user, 'password')
         );
@@ -27,24 +25,21 @@ final class CreateOperationControllerTest extends ApiTestCase
         $response1 = $client->request('POST', '/api/login_check', [
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [
-                'email' => 'this3@gmail.com',
+                'email' => 'this6@gmail.com',
                 'password' => 'password', 
         ]]);
 
         $token = $response1->toArray()["token"];
-
-        // var_dump($token);
 
         $response2 = $client->request('POST', '/api/id', [
             "headers" => [
                 "Authorization" => "Bearer ". $token
             ],
             'json' => [
-                'email' => 'this3@gmail.com',
+                'email' => 'this6@gmail.com',
             ]
             
         ]);
-        // var_dump($response2->toArray());
         $id = $response2->toArray()["id"];
 
         $response3 = $client->request('GET', "api/users/$id/operations", [
@@ -67,11 +62,6 @@ final class CreateOperationControllerTest extends ApiTestCase
                 "category" => "TAX"
             ]
         ]);
-        $json3 = $response4->toArray();
-        // self::assert();
-        self::assertResponseIsSuccessful();
-        $this->assertArrayHasKey('message', $json3);
-        $this->assertEquals("Operation created", $json3["message"]);
 
         $response5 = $client->request('GET', "api/users/$id/operations", [
             "headers" => [
@@ -80,6 +70,23 @@ final class CreateOperationControllerTest extends ApiTestCase
         ]);
 
         self::assertCount(1, $response5->toArray()["member"]);
+
+        $operation = $response5->toArray()["member"][0];
+
+        $client->request('DELETE', "/api/users/$id/operations/" . $operation["id"], [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                "Authorization" => "Bearer $token"
+            ]]);
+
+        $response6 = $client->request('GET', "api/users/$id/operations", [
+            "headers" => [
+                "Authorization" => "Bearer $token"
+            ]
+        ])->toArray();
+
+        self::assertCount(0, $response6["member"]);
+
 
 
     }
