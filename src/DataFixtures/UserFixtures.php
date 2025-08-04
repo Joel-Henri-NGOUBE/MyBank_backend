@@ -13,13 +13,7 @@ class UserFixtures extends Fixture
     {
         $newUser = new User();
         $newUser->setEmail("this@gmail.com");
-        // $passwordHasher = new UserPasswordHasherInterface();
-        // $hashedPassword = $passwordHasher->hashPassword(
-        //     $newUser,
-        //     "password"
-        // );
         $newUser->setPassword("password");
-        // $userRepository->upgradePassword($newUser, $hashedPassword);
         $manager->persist($newUser);
         $manager->flush();
     }
