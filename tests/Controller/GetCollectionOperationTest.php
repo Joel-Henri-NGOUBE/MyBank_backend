@@ -117,22 +117,5 @@ final class GetCollectionOperationTest extends ApiTestCase
         self::assertResponseIsSuccessful();
         self::assertCount(4, $response4->toArray()["member"]);
 
-        // $operationId = $operation->getId();
-
-        // $response4 = $client->request('GET', "api/users/$id/operations/$operationId", [
-        //     "headers" => [
-        //         "Authorization" => "Bearer $token"
-        //     ]
-        // ]);
-        
-        // var_dump($response4->toArray());
-        // $json3 = $response4->toArray();
-        // // self::assert();
-        // $this->assertArrayHasKey('message', $json3);
-        // $this->assertEquals("Operation created", $json3["message"]);
-
-        // self::assertCount(1, $response5->toArray()["member"]);
-
-
     }
 }

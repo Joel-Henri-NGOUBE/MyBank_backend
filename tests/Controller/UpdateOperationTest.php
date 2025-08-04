@@ -33,8 +33,6 @@ final class UpdateOperationTest extends ApiTestCase
 
         $token = $response1->toArray()["token"];
 
-        // var_dump($token);
-
         $response2 = $client->request('POST', '/api/id', [
             "headers" => [
                 "Authorization" => "Bearer ". $token
@@ -44,7 +42,7 @@ final class UpdateOperationTest extends ApiTestCase
             ]
             
         ]);
-        // var_dump($response2->toArray());
+
         $id = $response2->toArray()["id"];
 
         $response3 = $client->request('GET', "api/users/$id/operations", [
@@ -52,8 +50,6 @@ final class UpdateOperationTest extends ApiTestCase
                 "Authorization" => "Bearer $token"
             ]
         ]);
-
-        // self::assertCount(0, $response3->toArray()["member"]);
 
         $response4 = $client->request('POST', "/api/users/$id/operations", [
             'headers' => [
@@ -67,11 +63,6 @@ final class UpdateOperationTest extends ApiTestCase
                 "category" => "TAX"
             ]
         ]);
-        // $json3 = $response4->toArray();
-        // self::assert();
-        // self::assertResponseIsSuccessful();
-        // $this->assertArrayHasKey('message', $json3);
-        // $this->assertEquals("Operation created", $json3["message"]);
 
         $response5 = $client->request('GET', "api/users/$id/operations", [
             "headers" => [
@@ -98,8 +89,6 @@ final class UpdateOperationTest extends ApiTestCase
                 "Authorization" => "Bearer $token"
             ]
         ])->toArray();
-
-        var_dump($response6);
 
         self::assertEquals("PAIEMENT DES TAXES FONCIERES", $response6["label"]);
 

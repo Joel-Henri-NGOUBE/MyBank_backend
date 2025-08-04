@@ -11,7 +11,6 @@ final class UserControllerTest extends ApiTestCase
 {
     public function testIndex(): void
     {
-        // (new SignUpControllerTest())->testIndex();
 
         $client = static::createClient();
 
@@ -19,15 +18,12 @@ final class UserControllerTest extends ApiTestCase
 
         $user = new User();
         $user->setEmail('this2@gmail.com');
-        // echo($user->getEmail());
         $user->setPassword(
             $container->get('security.user_password_hasher')->hashPassword($user, 'password')
         );
-        // var_dump($user, 1);
         $manager = $container->get('doctrine')->getManager();
         $manager->persist($user);
         $manager->flush();
-        // var_dump($user, 2);
         
         $response1 = $client->request('POST', '/api/login_check', [
             'headers' => ['Content-Type' => 'application/json'],
@@ -36,10 +32,6 @@ final class UserControllerTest extends ApiTestCase
                 'password' => 'password', 
                 ]]);
                 
-        // var_dump($user, 3);
-        // var_dump($json);
-        // echo($user->getEmail());
-        // echo($user->getId());
         $this->assertResponseIsSuccessful();
         $json = $response1->toArray();
         $this->assertArrayHasKey('token', $json);
@@ -54,14 +46,10 @@ final class UserControllerTest extends ApiTestCase
                 
         ]);
             
-        // var_dump($user, 4);
         $this->assertResponseIsSuccessful();
         $json2 = $response2->toArray();
-        // var_dump($json2);
         $this->assertArrayHasKey('id', $json2);
-        // echo($user->getId());
         $this->assertEquals($user->getId(), $json2["id"]);
         
-        // self::assertResponseIsSuccessful();
     }
 }

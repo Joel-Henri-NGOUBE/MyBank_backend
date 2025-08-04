@@ -5,8 +5,6 @@ namespace App\Tests\Controller;
 use App\Entity\User;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 
-// use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
 final class CreateOperationControllerTest extends ApiTestCase
 {
     public function testIndex(): void
@@ -33,8 +31,6 @@ final class CreateOperationControllerTest extends ApiTestCase
 
         $token = $response1->toArray()["token"];
 
-        // var_dump($token);
-
         $response2 = $client->request('POST', '/api/id', [
             "headers" => [
                 "Authorization" => "Bearer ". $token
@@ -44,7 +40,7 @@ final class CreateOperationControllerTest extends ApiTestCase
             ]
             
         ]);
-        // var_dump($response2->toArray());
+
         $id = $response2->toArray()["id"];
 
         $response3 = $client->request('GET', "api/users/$id/operations", [
@@ -67,8 +63,8 @@ final class CreateOperationControllerTest extends ApiTestCase
                 "category" => "TAX"
             ]
         ]);
+        
         $json3 = $response4->toArray();
-        // self::assert();
         self::assertResponseIsSuccessful();
         $this->assertArrayHasKey('message', $json3);
         $this->assertEquals("Operation created", $json3["message"]);

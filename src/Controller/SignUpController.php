@@ -18,8 +18,7 @@ class SignUpController extends AbstractController
     public function signup(Request $request, EntityManagerInterface $em, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): JsonResponse
     {
         $payload = $request->getPayload()->all();
-        // echo("The payload");
-        // var_dump($payload);
+
         $userExists = $userRepository->findOneByEmailField($payload["email"]);
         if($userExists){
             return $this->json([
