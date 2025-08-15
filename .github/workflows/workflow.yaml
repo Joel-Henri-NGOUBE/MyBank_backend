@@ -38,7 +38,7 @@ jobs:
         run: cp .env .env.test
 
       - name: Update DATABASE_URL env var
-        run: sed -i 's/DATABASE_URL=.*/DATABASE_URL="mysql:\/\/root:@127.0.0.1:3306\/symfony_api?serverVersion=8.0.43&charset=utf8mb4"/' .env.test
+        run: sed -i 's/DATABASE_URL=.*/DATABASE_URL="mysql:\/\/root:@127.0.0.1:3306\/symfony_api?serverVersion=8.0.43"/' .env.test
 
       - name: Create database
         run: php bin/console doctrine:database:create --env=test
