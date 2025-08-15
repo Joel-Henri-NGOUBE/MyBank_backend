@@ -89,6 +89,7 @@
     "require-dev": {
         "dama/doctrine-test-bundle": "^8.3",
         "doctrine/doctrine-fixtures-bundle": "^4.1",
+        "hautelook/alice-bundle": "^2.15",
         "phpunit/phpunit": "^11.5",
         "symfony/maker-bundle": "^1.64"
     }

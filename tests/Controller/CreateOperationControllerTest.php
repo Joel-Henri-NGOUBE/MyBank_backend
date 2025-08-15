@@ -4,9 +4,13 @@ namespace App\Tests\Controller;
 
 use App\Entity\User;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 
 final class CreateOperationControllerTest extends ApiTestCase
 {
+
+    use ReloadDatabaseTrait;
+
     public function testIndex(): void
     {
         $client = static::createClient();
@@ -27,7 +31,7 @@ final class CreateOperationControllerTest extends ApiTestCase
             'json' => [
                 'email' => 'this3@gmail.com',
                 'password' => 'password', 
-        ]]);
+        ]]);       
 
         $token = $response1->toArray()["token"];
 
@@ -63,7 +67,7 @@ final class CreateOperationControllerTest extends ApiTestCase
                 "category" => "TAX"
             ]
         ]);
-        
+
         $json3 = $response4->toArray();
         self::assertResponseIsSuccessful();
         $this->assertArrayHasKey('message', $json3);
