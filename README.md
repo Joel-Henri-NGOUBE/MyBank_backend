@@ -1,4 +1,4 @@
-### Lancement de l'application
+### Lancement de API
 
 #### Préréquis
 - Git
@@ -22,7 +22,27 @@ Vous devez:
 
 - Installer les dépendances grâce à la commande `composer install`
 
+- Générer une paire de clé pour la création des tokens avec la commande: `php bin/console lexik:jwt:generate-keypair`
+
+- Créer la base de données avec la commande: `php bin/console doctrine:database:create`
+
+- Créer les migrations de la base de données avec la commande: `php bin/console make:migration`
+
+- Exécuter les migrations de la base de donées avec la commande: `php bin/console doctrine:migrations:migrate`
+
 - Pour lancer l'application, vous devez exécuter la commande `php -S 127.0.0.1:8000 -t public`
+
+##### Tests de l'API
+
+Pour réaliser les tests sur les méthodes et les routes de l'API, vous devez:
+
+- Créer la base de données dans l'environnement de test avec la commande: `php bin/console doctrine:database:create --env=test`
+
+- Si des modifications ont été effectuées dans les entités, créer de nouvelles migrations de la base de données avec la commande: `php bin/console make:migration`
+
+- Exécuter les migrations de la base de donées avec la commande: `php bin/console doctrine:migrations:migrate --env=test`
+
+- Réaliser l'exécution des test avec la commande `./vendor/bin/phpunit tests`
 
 #### Avec Docker
 
