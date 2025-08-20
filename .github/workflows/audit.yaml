@@ -10,7 +10,7 @@ jobs:
   audit:
     name: Run audit
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v3
       - name: Set up PHP
@@ -21,7 +21,7 @@ jobs:
           coverage: none
         
       - name: Set Up Cache
-        run: echo "COMPOSER_CACHE_DIR=$(compsoer config cache-dir)" >> $GITHUB_ENV
+        run: echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_ENV
 
       - name: Caching Dependencies
         uses: actions/cache@v4
@@ -31,7 +31,7 @@ jobs:
           restore-keys: |
             php8.3-composer-latest-
 
-      -name: Update composer   
+      - name: Update composer   
         run: composer self-update
 
       - name: Install dependencies
