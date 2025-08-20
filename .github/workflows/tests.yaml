@@ -1,4 +1,4 @@
-name: API Platform Service
+name: API Platform Service Tests
 
 on:
   push:

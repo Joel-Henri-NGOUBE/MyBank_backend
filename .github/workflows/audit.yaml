@@ -1,0 +1,59 @@
+name: API Platform Service Audit
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  tests:
+    name: Run tests
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0.43
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+          MYSQL_DATABASE: symfony_api
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql
+          coverage: none
+        
+      - name: Set Up Cache
+        run: echo "COMPOSER_CACHE_DIR=$(compsoer config cache-dir)" >> $GITHUB_ENV
+
+      - name: Caching Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.COMPOSER_CACHE_DIR }}
+          key: php8.3-composer-{{ hashFiles('**/composer.json') }}
+          restore-keys: |
+            php8.3-composer-latest-
+
+      -name: Update composer   
+        run: composer self-update
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+
+      - name: Security Audit
+        run: composer audit --no-dev --abandonned=report --ignore-severity=low --ignore-severity=medium --format=json --no-ansi > /tmp/security-audit.json
+      
+      - name: Upload security audit report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-audit
+          path: /tmp/security-audit.json
