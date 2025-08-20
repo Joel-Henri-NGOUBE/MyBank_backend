@@ -12,7 +12,8 @@ final class DeleteOperationTest extends ApiTestCase
         $client = static::createClient();
 
         $container = self::getContainer();
-
+        
+        // Creating an user
         $user = new User();
         $user->setEmail('this6@gmail.com');
         $user->setPassword(
@@ -22,6 +23,7 @@ final class DeleteOperationTest extends ApiTestCase
         $manager->persist($user);
         $manager->flush();
 
+        // Authenticating him
         $response1 = $client->request('POST', '/api/login_check', [
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [
@@ -31,6 +33,7 @@ final class DeleteOperationTest extends ApiTestCase
 
         $token = $response1->toArray()["token"];
 
+        // Getting his id
         $response2 = $client->request('POST', '/api/id', [
             "headers" => [
                 "Authorization" => "Bearer ". $token
@@ -42,6 +45,7 @@ final class DeleteOperationTest extends ApiTestCase
         ]);
         $id = $response2->toArray()["id"];
 
+        // Getting all his operations. At this levelo, there is no operation
         $response3 = $client->request('GET', "api/users/$id/operations", [
             "headers" => [
                 "Authorization" => "Bearer $token"
@@ -50,6 +54,7 @@ final class DeleteOperationTest extends ApiTestCase
 
         self::assertCount(0, $response3->toArray()["member"]);
 
+        // Creating an operation for the user
         $response4 = $client->request('POST', "/api/users/$id/operations", [
             'headers' => [
                 'Content-Type' => 'application/json',
@@ -63,6 +68,7 @@ final class DeleteOperationTest extends ApiTestCase
             ]
         ]);
 
+        // Getting all his operations. At this level, there is one operation
         $response5 = $client->request('GET', "api/users/$id/operations", [
             "headers" => [
                 "Authorization" => "Bearer $token"
@@ -73,12 +79,14 @@ final class DeleteOperationTest extends ApiTestCase
 
         $operation = $response5->toArray()["member"][0];
 
+        // Deleting the added operation
         $client->request('DELETE', "/api/users/$id/operations/" . $operation["id"], [
             'headers' => [
                 'Content-Type' => 'application/json',
                 "Authorization" => "Bearer $token"
             ]]);
 
+        // Getting all his operations. At this level, there is no more operation
         $response6 = $client->request('GET', "api/users/$id/operations", [
             "headers" => [
                 "Authorization" => "Bearer $token"

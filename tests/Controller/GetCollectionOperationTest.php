@@ -17,7 +17,8 @@ final class GetCollectionOperationTest extends ApiTestCase
         $client = static::createClient();
 
         $container = self::getContainer();
-
+        
+        // Creating an user
         $user = new User();
         $user->setEmail('this4@gmail.com');
         $user->setPassword(
@@ -27,6 +28,7 @@ final class GetCollectionOperationTest extends ApiTestCase
         $manager->persist($user);
         $manager->flush();
 
+        // Authenticating him
         $response1 = $client->request('POST', '/api/login_check', [
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [
@@ -36,6 +38,7 @@ final class GetCollectionOperationTest extends ApiTestCase
 
         $token = $response1->toArray()["token"];
 
+        // Getting his id
         $response2 = $client->request('POST', '/api/id', [
             "headers" => [
                 "Authorization" => "Bearer ". $token
@@ -48,6 +51,7 @@ final class GetCollectionOperationTest extends ApiTestCase
 
         $id = $response2->toArray()["id"];
 
+        // Getting all his operations. At this level, there is no operation
         $response3 = $client->request('GET', "api/users/$id/operations", [
             "headers" => [
                 "Authorization" => "Bearer $token"
@@ -56,6 +60,7 @@ final class GetCollectionOperationTest extends ApiTestCase
 
         self::assertCount(0, $response3->toArray()["member"]);
 
+        // Creating 4 operations for the user
         $client->request('POST', "/api/users/$id/operations", [
             'headers' => [
                 'Content-Type' => 'application/json',
@@ -108,6 +113,7 @@ final class GetCollectionOperationTest extends ApiTestCase
             ]
         ]);
 
+        // Getting all his operations. At this level, there are operations
         $response4 = $client->request('GET', "api/users/$id/operations", [
             "headers" => [
                 "Authorization" => "Bearer $token"

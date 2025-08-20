@@ -17,6 +17,7 @@ final class CreateOperationControllerTest extends ApiTestCase
 
         $container = self::getContainer();
 
+        // Creating an user
         $user = new User();
         $user->setEmail('this3@gmail.com');
         $user->setPassword(
@@ -26,6 +27,7 @@ final class CreateOperationControllerTest extends ApiTestCase
         $manager->persist($user);
         $manager->flush();
 
+        // Authenticating him
         $response1 = $client->request('POST', '/api/login_check', [
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [
@@ -35,6 +37,7 @@ final class CreateOperationControllerTest extends ApiTestCase
 
         $token = $response1->toArray()["token"];
 
+        // Getting his id
         $response2 = $client->request('POST', '/api/id', [
             "headers" => [
                 "Authorization" => "Bearer ". $token
@@ -47,6 +50,7 @@ final class CreateOperationControllerTest extends ApiTestCase
 
         $id = $response2->toArray()["id"];
 
+        // Getting all his operations. At this level, there is no operation
         $response3 = $client->request('GET', "api/users/$id/operations", [
             "headers" => [
                 "Authorization" => "Bearer $token"
@@ -55,6 +59,7 @@ final class CreateOperationControllerTest extends ApiTestCase
 
         self::assertCount(0, $response3->toArray()["member"]);
 
+        // Creating an operation for the user
         $response4 = $client->request('POST', "/api/users/$id/operations", [
             'headers' => [
                 'Content-Type' => 'application/json',
@@ -73,6 +78,7 @@ final class CreateOperationControllerTest extends ApiTestCase
         $this->assertArrayHasKey('message', $json3);
         $this->assertEquals("Operation created", $json3["message"]);
 
+        // Getting all his operations. At this level, there is one operation
         $response5 = $client->request('GET', "api/users/$id/operations", [
             "headers" => [
                 "Authorization" => "Bearer $token"

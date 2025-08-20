@@ -17,6 +17,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\GetCollection;
 
 #[ORM\Entity(repositoryClass: OperationsRepository::class)]
+// Defines the route that adds an operation
 #[ApiResource(
     uriTemplate: '/users/{user_id}/operations', 
     uriVariables: [
@@ -25,6 +26,8 @@ use ApiPlatform\Metadata\GetCollection;
     controller:  CreateOperationController::class
         
     )]
+
+// Defines the route that gets an operation
 #[ApiResource(
     uriTemplate: '/users/{user_id}/operations/{id}', 
     uriVariables: [
@@ -32,6 +35,8 @@ use ApiPlatform\Metadata\GetCollection;
         "id" => new Link(fromClass: Operations::class)], 
     operations: [new Get()]   
     )]
+
+// Defines the route that gets all the operations
 #[ApiResource(
     uriTemplate: '/users/{user_id}/operations', 
     uriVariables: [
@@ -39,6 +44,8 @@ use ApiPlatform\Metadata\GetCollection;
     ], 
     operations: [new GetCollection()]   
     )]
+
+// Defines the route that sets an operation
 #[ApiResource(
     uriTemplate: '/users/{user_id}/operations/{id}', 
     uriVariables: [
@@ -46,6 +53,8 @@ use ApiPlatform\Metadata\GetCollection;
         "id" => new Link(fromClass: Operations::class)], 
     operations: [new Patch()]   
     )]
+
+// Defines the route that deletes an operation
 #[ApiResource(
     uriTemplate: '/users/{user_id}/operations/{id}', 
     uriVariables: [
@@ -53,6 +62,8 @@ use ApiPlatform\Metadata\GetCollection;
         "id" => new Link(fromClass: Operations::class)], 
     operations: [new Delete()] 
 )]
+
+// Defining serializer options
 #[ApiResource(
     normalizationContext: ['groups' => ['read']],
     denormalizationContext: ['groups' => ['write']],

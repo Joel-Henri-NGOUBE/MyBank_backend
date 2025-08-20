@@ -2,6 +2,10 @@
 
 namespace App\Entity;
 
+/**
+ * Defines the Enum class Category that will be used to type the Category field
+ */
+
 enum Category: string{
     case Tax = "TAX";
     case Subscription = "SUBSCRIPTION";

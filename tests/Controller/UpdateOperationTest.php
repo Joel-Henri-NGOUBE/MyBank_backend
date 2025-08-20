@@ -15,6 +15,7 @@ final class UpdateOperationTest extends ApiTestCase
 
         $container = self::getContainer();
 
+        // Creating an user
         $user = new User();
         $user->setEmail('this5@gmail.com');
         $user->setPassword(
@@ -24,6 +25,7 @@ final class UpdateOperationTest extends ApiTestCase
         $manager->persist($user);
         $manager->flush();
 
+        // Authenticating him
         $response1 = $client->request('POST', '/api/login_check', [
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [
@@ -33,6 +35,7 @@ final class UpdateOperationTest extends ApiTestCase
 
         $token = $response1->toArray()["token"];
 
+        // Getting his id
         $response2 = $client->request('POST', '/api/id', [
             "headers" => [
                 "Authorization" => "Bearer ". $token
@@ -45,12 +48,14 @@ final class UpdateOperationTest extends ApiTestCase
 
         $id = $response2->toArray()["id"];
 
+        // Getting all his operations. At this level, there is no operation
         $response3 = $client->request('GET', "api/users/$id/operations", [
             "headers" => [
                 "Authorization" => "Bearer $token"
             ]
         ]);
 
+        // Creating an operation for the user
         $response4 = $client->request('POST', "/api/users/$id/operations", [
             'headers' => [
                 'Content-Type' => 'application/json',
@@ -64,6 +69,7 @@ final class UpdateOperationTest extends ApiTestCase
             ]
         ]);
 
+        // Getting all his operations. At this level, there is one operation
         $response5 = $client->request('GET', "api/users/$id/operations", [
             "headers" => [
                 "Authorization" => "Bearer $token"
@@ -74,6 +80,7 @@ final class UpdateOperationTest extends ApiTestCase
 
         self::assertEquals("PAIEMENT DES TAXES FONCIERES SAS\nREF:FR2025:48:456355:34334:34", $operation["label"]);
 
+        // Modifying the added operation
         $client->request('PATCH', "/api/users/$id/operations/" . $operation["id"], [
             'headers' => [
                 'Content-Type' => 'application/merge-patch+json',
@@ -84,6 +91,7 @@ final class UpdateOperationTest extends ApiTestCase
             ]
         ]);
 
+        // Verify that the operation has indeed been modified
         $response6 = $client->request('GET', "api/users/$id/operations/" . $operation["id"], [
             "headers" => [
                 "Authorization" => "Bearer $token"

@@ -16,6 +16,7 @@ final class UserControllerTest extends ApiTestCase
 
         $container = self::getContainer();
 
+        // Creating an user
         $user = new User();
         $user->setEmail('this2@gmail.com');
         $user->setPassword(
@@ -25,6 +26,7 @@ final class UserControllerTest extends ApiTestCase
         $manager->persist($user);
         $manager->flush();
         
+        // Authenticating him
         $response1 = $client->request('POST', '/api/login_check', [
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [
@@ -36,6 +38,7 @@ final class UserControllerTest extends ApiTestCase
         $json = $response1->toArray();
         $this->assertArrayHasKey('token', $json);
         
+        // Getting his id to assert he has been created
         $response2 = $client->request('POST', '/api/id', [
             "headers" => [
                 "Authorization" => "Bearer ". $json["token"]

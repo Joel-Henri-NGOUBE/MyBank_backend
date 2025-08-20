@@ -19,6 +19,7 @@ class SignUpController extends AbstractController
     {
         $payload = $request->getPayload()->all();
 
+        // Determines if the user exists
         $userExists = $userRepository->findOneByEmailField($payload["email"]);
         if($userExists){
             return $this->json([
@@ -29,6 +30,8 @@ class SignUpController extends AbstractController
         }
         $newUser = new User();
         $newUser->setEmail($payload["email"]);
+
+        // Hashes the password
         $hashedPassword = $passwordHasher->hashPassword(
             $newUser,
             $payload["password"]
