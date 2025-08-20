@@ -38,7 +38,7 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
 
       - name: Security Audit
-        run: composer audit --no-dev --abandonned=report --ignore-severity=low --ignore-severity=medium --format=json --no-ansi > /tmp/security-audit.json
+        run: composer audit --no-dev --abandoned=report --ignore-severity=low --ignore-severity=medium --format=json --no-ansi > /tmp/security-audit.json
       
       - name: Upload security audit report
         uses: actions/upload-artifact@v4
