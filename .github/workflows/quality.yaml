@@ -43,7 +43,7 @@ jobs:
 
       # Verifying that the YAML syntaxes of config, .github directories and docker-compose file have the right syntaxes
       - name: Lint of YAML
-        run: php bin/console lint.yaml config .github docker-compose.yaml >> /tmp/assurance-report.txt
+        run: php bin/console lint:yaml config .github docker-compose.yaml >> /tmp/assurance-report.txt
 
       # Verifying that the code standards follows syntax code requirements based on Phpstan
       - name: PHPStan
