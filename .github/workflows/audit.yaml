@@ -19,10 +19,12 @@ jobs:
           php-version: 8.2
           extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql
           coverage: none
-        
+              
+      # Defining the cache dir in the environment variables of the runner
       - name: Set Up Cache
         run: echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_ENV
-
+      
+      # Defining the cache dir access options
       - name: Caching Dependencies
         uses: actions/cache@v4
         with:
@@ -37,9 +39,11 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
 
+      # Defining audit specifications
       - name: Security Audit
         run: composer audit --no-dev --abandoned=report --ignore-severity=low --ignore-severity=medium --format=json --no-ansi > /tmp/security-audit.json
       
+      # Retrieving the audit specifications
       - name: Upload security audit report
         uses: actions/upload-artifact@v4
         if: always()

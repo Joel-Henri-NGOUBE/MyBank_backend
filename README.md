@@ -42,7 +42,7 @@ Pour réaliser les tests sur les méthodes et les routes de l'API, vous devez:
 
 - Exécuter les migrations de la base de donées avec la commande: `php bin/console doctrine:migrations:migrate --env=test`
 
-- Réaliser l'exécution des test avec la commande `./vendor/bin/phpunit tests`
+- Réaliser l'exécution des tests avec la commande `./vendor/bin/phpunit tests`
 
 #### Avec Docker
 

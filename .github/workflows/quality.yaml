@@ -20,9 +20,11 @@ jobs:
           extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql
           coverage: none
         
+      # Defining the cache dir in the environment variables of the runner
       - name: Set Up Cache
         run: echo "COMPOSER_CACHE_DIR=$(composer config cache-dir)" >> $GITHUB_ENV
 
+      # Defining the cache dir access options
       - name: Caching Dependencies
         uses: actions/cache@v4
         with:
@@ -53,6 +55,7 @@ jobs:
       - name: Rector
         run: ./vendor/bin/rector --dry-run >> /tmp/assurance-report.txt
 
+      # Retrieving the artifact
       - name: Upload quality report
         uses: actions/upload-artifact@v4
         if: always()
