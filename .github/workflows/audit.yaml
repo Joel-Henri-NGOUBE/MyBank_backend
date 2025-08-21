@@ -35,7 +35,7 @@ jobs:
         run: composer self-update
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-interaction --no-dev
+        run: composer install --prefer-dist --no-progress --no-interaction
 
       - name: Security Audit
         run: composer audit --no-dev --abandoned=report --ignore-severity=low --ignore-severity=medium --format=json --no-ansi > /tmp/security-audit.json
