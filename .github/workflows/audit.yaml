@@ -39,11 +39,11 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
 
-      # Defining audit specifications
+      # Executing the audit and defining its specifications
       - name: Security Audit
         run: composer audit --no-dev --abandoned=report --ignore-severity=low --ignore-severity=medium --format=json --no-ansi > /tmp/security-audit.json
       
-      # Retrieving the audit specifications
+      # Retrieving the audit result
       - name: Upload security audit report
         uses: actions/upload-artifact@v4
         if: always()
