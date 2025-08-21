@@ -15,6 +15,8 @@
 lexik_jwt_authentication.yaml
 ###< lexik/jwt-authentication-bundle ###
 
+composer.lock
+
 ###> phpunit/phpunit ###
 /phpunit.xml
 /.phpunit.cache/

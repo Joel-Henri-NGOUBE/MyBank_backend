@@ -2,46 +2,45 @@
 
 namespace App\Controller;
 
-use App\Repository\UserRepository;
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Attribute\Route;
 
 class SignUpController extends AbstractController
 {
-    #[Route('signup', name: 'signup', methods: ["POST"])]
+    #[Route('signup', name: 'signup', methods: ['POST'])]
     public function signup(Request $request, EntityManagerInterface $em, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): JsonResponse
     {
         $payload = $request->getPayload()->all();
 
         // Determines if the user exists
-        $userExists = $userRepository->findOneByEmailField($payload["email"]);
-        if($userExists){
+        $userExists = $userRepository->findOneByEmailField($payload['email']);
+        if ($userExists) {
             return $this->json([
-                "code" => "401", 
-                "message" => "An account with this email address already exists"
-                ])
+                'code' => '401',
+                'message' => 'An account with this email address already exists',
+            ])
                 ->setStatusCode(401);
         }
         $newUser = new User();
-        $newUser->setEmail($payload["email"]);
+        $newUser->setEmail($payload['email']);
 
         // Hashes the password
         $hashedPassword = $passwordHasher->hashPassword(
             $newUser,
-            $payload["password"]
+            $payload['password']
         );
         $userRepository->upgradePassword($newUser, $hashedPassword);
 
         return $this->json([
-            "code" => "200", 
-            "message" => "User account created successfully"])
+            'code' => '200',
+            'message' => 'User account created successfully',
+        ])
             ->setStatusCode(200);
     }
-
 }

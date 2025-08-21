@@ -2,91 +2,93 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\UserRepository;
-use App\Entity\Operations;
 use App\Entity\Category;
+use App\Entity\Operations;
 use App\Entity\Type;
-use ApiPlatform\Metadata\UriVariable;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 final class CreateOperationController extends AbstractController
 {
-    public function __invoke($user_id, Request $request, UserRepository $userRepository, EntityManagerInterface $em){
+    public function __invoke($user_id, Request $request, UserRepository $userRepository, EntityManagerInterface $em): JsonResponse
+    {
         $payload = $request->getPayload()->all();
         $newOperation = new Operations();
-        $newOperation->setLabel($payload["label"]);
-        $newOperation->setCategory(associateCategory($payload["category"]));
-        $newOperation->setType(associateType($payload["type"]));
-        $newOperation->setAmount($payload["amount"]);
+        $newOperation->setLabel($payload['label']);
+        $newOperation->setCategory(associateCategory($payload['category']));
+        $newOperation->setType(associateType($payload['type']));
+        $newOperation->setAmount($payload['amount']);
         $userRepository->findOneByIdField($user_id)->addOperation($newOperation);
         $em->persist($newOperation);
         $em->flush();
 
-        return $this->json(["message" => "Operation created"]);
-
+        return $this->json([
+            'message' => 'Operation created',
+        ]);
 
     }
 }
 
-function associateCategory($string){
-    switch($string){
-        case "TAX":
+function associateCategory($string)
+{
+    switch ($string) {
+        case 'TAX':
             return Category::Tax;
-        case "SUBSCRIPTION":
+        case 'SUBSCRIPTION':
             return Category::Subscription;
-        case "PAYMENT":
+        case 'PAYMENT':
             return Category::Payment;
-        case "COURSES":
+        case 'COURSES':
             return Category::Courses;
-        case "SALARY":
+        case 'SALARY':
             return Category::Salary;
-        case "ALLOCATION":
+        case 'ALLOCATION':
             return Category::Allocation;
-        case "AUTOMOTO":
+        case 'AUTOMOTO':
             return Category::AutoMoto;
-        case "DEPOSIT":
+        case 'DEPOSIT':
             return Category::Deposit;
-        case "WITHDRAWAL":
+        case 'WITHDRAWAL':
             return Category::Withdrawal;
-        case "CHEQUE":
+        case 'CHEQUE':
             return Category::Cheque;
-        case "LOAN":
+        case 'LOAN':
             return Category::Loan;
-        case "HOUSING":
+        case 'HOUSING':
             return Category::Housing;
-        case "ALIMONY":
+        case 'ALIMONY':
             return Category::Alimony;
-        case "REFUND":
+        case 'REFUND':
             return Category::Refund;
-        case "HEALTH":
+        case 'HEALTH':
             return Category::Health;
-        case "TRANSFER ISSUED":
+        case 'TRANSFER ISSUED':
             return Category::Transfer_issued;
-        case "TRANSFER RECEIVED":
+        case 'TRANSFER RECEIVED':
             return Category::Transfer_received;
-        case "TRANSPORT":
+        case 'TRANSPORT':
             return Category::Transport;
-        case "GIFT":
+        case 'GIFT':
             return Category::Gift;
-        case "EDUCATION":
+        case 'EDUCATION':
             return Category::Education;
-        case "LEISURE":
+        case 'LEISURE':
             return Category::Leisure;
-        case "SAVING":
+        case 'SAVING':
             return Category::Saving;
     }
-    
+
 }
 
-function associateType($string){
-    switch($string){
-        case "INCOME":
+function associateType($string)
+{
+    switch ($string) {
+        case 'INCOME':
             return Type::Income;
-        case "EXPENSE":
+        case 'EXPENSE':
             return Type::Expense;
     }
 }

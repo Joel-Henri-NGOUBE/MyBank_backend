@@ -2,20 +2,24 @@
 
 namespace App\Tests\Controller;
 
-// use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 
 final class SignUpControllerTest extends ApiTestCase
 {
+    use ReloadDatabaseTrait;
+
     public function testIndex(): void
     {
         $client = static::createClient();
         $response = $client->request('POST', '/signup', [
-            'headers' => ['Content-Type' => 'application/json'],  
-            "json" => [
+            'headers' => [
+                'Content-Type' => 'application/json',
+            ],
+            'json' => [
                 'email' => 'this1@gmail.com',
-                'password' => 'password',    
-            ]
+                'password' => 'password',
+            ],
         ]);
 
         self::assertResponseIsSuccessful();

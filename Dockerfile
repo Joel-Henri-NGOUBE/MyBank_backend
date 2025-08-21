@@ -10,7 +10,10 @@ ENV DATABASE_URL=mysql://root:@mysql:3306/symfony_api?serverVersion=8.0.32&chars
 
 RUN docker-php-ext-install pdo pdo_mysql
 
-RUN apt-get update -qq && apt-get install -y unzip git curl zip && curl -sS https://getcomposer.org/installer | php && php composer.phar install
+RUN apt-get update -qq && apt-get install -y unzip git curl zip && curl -sS https://getcomposer.org/installer | php \
+  && chmod +x composer.phar && mv composer.phar /usr/local/bin/composer
+
+RUN composer install
 
 CMD ["./commands.sh"]
 

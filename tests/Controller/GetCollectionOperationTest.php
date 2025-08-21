@@ -2,22 +2,21 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\User;
-use App\Entity\Operations;
-use App\Entity\Category;
-use App\Entity\Type;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
-
-// use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Entity\Operations;
+use App\Entity\User;
+use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 
 final class GetCollectionOperationTest extends ApiTestCase
 {
+    use ReloadDatabaseTrait;
+
     public function testIndex(): void
     {
         $client = static::createClient();
 
         $container = self::getContainer();
-        
+
         // Creating an user
         $user = new User();
         $user->setEmail('this4@gmail.com');
@@ -30,98 +29,100 @@ final class GetCollectionOperationTest extends ApiTestCase
 
         // Authenticating him
         $response1 = $client->request('POST', '/api/login_check', [
-            'headers' => ['Content-Type' => 'application/json'],
-            'json' => [
-                'email' => 'this4@gmail.com',
-                'password' => 'password', 
-        ]]);
-
-        $token = $response1->toArray()["token"];
-
-        // Getting his id
-        $response2 = $client->request('POST', '/api/id', [
-            "headers" => [
-                "Authorization" => "Bearer ". $token
+            'headers' => [
+                'Content-Type' => 'application/json',
             ],
             'json' => [
                 'email' => 'this4@gmail.com',
-            ]
-            
+                'password' => 'password',
+            ],
         ]);
 
-        $id = $response2->toArray()["id"];
+        $token = $response1->toArray()['token'];
+
+        // Getting his id
+        $response2 = $client->request('POST', '/api/id', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token,
+            ],
+            'json' => [
+                'email' => 'this4@gmail.com',
+            ],
+        ]);
+
+        $id = $response2->toArray()['id'];
 
         // Getting all his operations. At this level, there is no operation
-        $response3 = $client->request('GET', "api/users/$id/operations", [
-            "headers" => [
-                "Authorization" => "Bearer $token"
-            ]
+        $response3 = $client->request('GET', "api/users/{$id}/operations", [
+            'headers' => [
+                'Authorization' => "Bearer {$token}",
+            ],
         ]);
 
-        self::assertCount(0, $response3->toArray()["member"]);
+        self::assertCount(0, $response3->toArray()['member']);
 
         // Creating 4 operations for the user
-        $client->request('POST', "/api/users/$id/operations", [
+        $client->request('POST', "/api/users/{$id}/operations", [
             'headers' => [
                 'Content-Type' => 'application/json',
-                "Authorization" => "Bearer $token"
-            ],  
-            "json" => [            
-                "label" => "PAIEMENT DES TAXES FONCIERES SAS\nREF:FR2025:48:456355:34334:34",
-                "amount" => 190.96,
-                "type" => "EXPENSE",
-                "category" => "TAX"
-            ]
+                'Authorization' => "Bearer {$token}",
+            ],
+            'json' => [
+                'label' => 'PAIEMENT DES TAXES FONCIERES SAS\nREF:FR2025:48:456355:34334:34',
+                'amount' => 190.96,
+                'type' => 'EXPENSE',
+                'category' => 'TAX',
+            ],
         ]);
 
-        $client->request('POST', "/api/users/$id/operations", [
+        $client->request('POST', "/api/users/{$id}/operations", [
             'headers' => [
                 'Content-Type' => 'application/json',
-                "Authorization" => "Bearer $token"
-            ],  
-            "json" => [            
-                "label" => "PAIEMENT DES TAXES FONCIERES SAS\nREF:FR2025:48:456355:34334:34",
-                "amount" => 190.96,
-                "type" => "EXPENSE",
-                "category" => "TAX"
-            ]
+                'Authorization' => "Bearer {$token}",
+            ],
+            'json' => [
+                'label' => 'PAIEMENT DES TAXES FONCIERES SAS\nREF:FR2025:48:456355:34334:34',
+                'amount' => 190.96,
+                'type' => 'EXPENSE',
+                'category' => 'TAX',
+            ],
         ]);
 
-        $client->request('POST', "/api/users/$id/operations", [
+        $client->request('POST', "/api/users/{$id}/operations", [
             'headers' => [
                 'Content-Type' => 'application/json',
-                "Authorization" => "Bearer $token"
-            ],  
-            "json" => [            
-                "label" => "PAIEMENT DES TAXES FONCIERES SAS\nREF:FR2025:48:456355:34334:34",
-                "amount" => 190.96,
-                "type" => "EXPENSE",
-                "category" => "TAX"
-            ]
+                'Authorization' => "Bearer {$token}",
+            ],
+            'json' => [
+                'label' => 'PAIEMENT DES TAXES FONCIERES SAS\nREF:FR2025:48:456355:34334:34',
+                'amount' => 190.96,
+                'type' => 'EXPENSE',
+                'category' => 'TAX',
+            ],
         ]);
 
-        $client->request('POST', "/api/users/$id/operations", [
+        $client->request('POST', "/api/users/{$id}/operations", [
             'headers' => [
                 'Content-Type' => 'application/json',
-                "Authorization" => "Bearer $token"
-            ],  
-            "json" => [            
-                "label" => "PAIEMENT DES TAXES FONCIERES SAS\nREF:FR2025:48:456355:34334:34",
-                "amount" => 190.96,
-                "type" => "EXPENSE",
-                "category" => "TAX"
-            ]
+                'Authorization' => "Bearer {$token}",
+            ],
+            'json' => [
+                'label' => 'PAIEMENT DES TAXES FONCIERES SAS\nREF:FR2025:48:456355:34334:34',
+                'amount' => 190.96,
+                'type' => 'EXPENSE',
+                'category' => 'TAX',
+            ],
         ]);
 
         // Getting all his operations. At this level, there are operations
-        $response4 = $client->request('GET', "api/users/$id/operations", [
-            "headers" => [
-                "Authorization" => "Bearer $token"
-            ]
+        $response4 = $client->request('GET', "api/users/{$id}/operations", [
+            'headers' => [
+                'Authorization' => "Bearer {$token}",
+            ],
         ]);
 
         self::assertResponseIsSuccessful();
-        self::assertCount(4, $response4->toArray()["member"]);
+        self::assertCount(4, $response4->toArray()['member']);
 
     }
 }

@@ -24,7 +24,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      */
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
-        if (!$user instanceof User) {
+        if (! $user instanceof User) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
         }
 
@@ -34,22 +34,22 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     public function findOneByEmailField($email): ?User
-       {
-           return $this->createQueryBuilder('u')
-               ->andWhere('u.email = :email')
-               ->setParameter('email', $email)
-               ->getQuery()
-               ->getOneOrNullResult()
-           ;
-       }
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.email = :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 
     public function findOneByIdField($id): ?User
-       {
-           return $this->createQueryBuilder('u')
-               ->andWhere('u.id = :id')
-               ->setParameter('id', $id)
-               ->getQuery()
-               ->getOneOrNullResult()
-           ;
-       }
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

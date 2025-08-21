@@ -2,13 +2,12 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\User;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use App\Entity\User;
 use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 
 final class CreateOperationControllerTest extends ApiTestCase
 {
-
     use ReloadDatabaseTrait;
 
     public function testIndex(): void
@@ -29,64 +28,65 @@ final class CreateOperationControllerTest extends ApiTestCase
 
         // Authenticating him
         $response1 = $client->request('POST', '/api/login_check', [
-            'headers' => ['Content-Type' => 'application/json'],
-            'json' => [
-                'email' => 'this3@gmail.com',
-                'password' => 'password', 
-        ]]);       
-
-        $token = $response1->toArray()["token"];
-
-        // Getting his id
-        $response2 = $client->request('POST', '/api/id', [
-            "headers" => [
-                "Authorization" => "Bearer ". $token
+            'headers' => [
+                'Content-Type' => 'application/json',
             ],
             'json' => [
                 'email' => 'this3@gmail.com',
-            ]
-            
+                'password' => 'password',
+            ],
         ]);
 
-        $id = $response2->toArray()["id"];
+        $token = $response1->toArray()['token'];
+
+        // Getting his id
+        $response2 = $client->request('POST', '/api/id', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token,
+            ],
+            'json' => [
+                'email' => 'this3@gmail.com',
+            ],
+        ]);
+
+        $id = $response2->toArray()['id'];
 
         // Getting all his operations. At this level, there is no operation
-        $response3 = $client->request('GET', "api/users/$id/operations", [
-            "headers" => [
-                "Authorization" => "Bearer $token"
-            ]
+        $response3 = $client->request('GET', "api/users/{$id}/operations", [
+            'headers' => [
+                'Authorization' => "Bearer {$token}",
+            ],
         ]);
 
-        self::assertCount(0, $response3->toArray()["member"]);
+        self::assertCount(0, $response3->toArray()['member']);
 
         // Creating an operation for the user
-        $response4 = $client->request('POST', "/api/users/$id/operations", [
+        $response4 = $client->request('POST', "/api/users/{$id}/operations", [
             'headers' => [
                 'Content-Type' => 'application/json',
-                "Authorization" => "Bearer $token"
-            ],  
-            "json" => [            
-                "label" => "PAIEMENT DES TAXES FONCIERES SAS\nREF:FR2025:48:456355:34334:34",
-                "amount" => 190.96,
-                "type" => "EXPENSE",
-                "category" => "TAX"
-            ]
+                'Authorization' => "Bearer {$token}",
+            ],
+            'json' => [
+                'label' => 'PAIEMENT DES TAXES FONCIERES SAS\nREF:FR2025:48:456355:34334:34',
+                'amount' => 190.96,
+                'type' => 'EXPENSE',
+                'category' => 'TAX',
+            ],
         ]);
 
         $json3 = $response4->toArray();
         self::assertResponseIsSuccessful();
         $this->assertArrayHasKey('message', $json3);
-        $this->assertEquals("Operation created", $json3["message"]);
+        $this->assertEquals('Operation created', $json3['message']);
 
         // Getting all his operations. At this level, there is one operation
-        $response5 = $client->request('GET', "api/users/$id/operations", [
-            "headers" => [
-                "Authorization" => "Bearer $token"
-            ]
+        $response5 = $client->request('GET', "api/users/{$id}/operations", [
+            'headers' => [
+                'Authorization' => "Bearer {$token}",
+            ],
         ]);
 
-        self::assertCount(1, $response5->toArray()["member"]);
-
+        self::assertCount(1, $response5->toArray()['member']);
 
     }
 }
