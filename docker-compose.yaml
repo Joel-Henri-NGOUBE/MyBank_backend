@@ -13,7 +13,7 @@ services:
       - 3306:3306
     # Définir un enregistrement des données de la base de données
     volumes:
-      - ./symfony_api:/var/lib/mysql/
+      - ./backup/symfony_api:/var/lib/mysql/
 
 # Lancer le service symfony
   symfony-api:
@@ -24,6 +24,9 @@ services:
     restart: always
     depends_on:
       - mysql
+    volumes:
+      - ./backup/migrations:/mybank/migrations/
+
 
 volumes:
-  symfony_api:
+  backup:
