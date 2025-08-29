@@ -67,3 +67,7 @@ L'API écoute les requêtes à l'adresse: http://127.0.0.1:8000
 ### Documentation
 
 La documentation de l'API est disponible à l'adresse: `http://127.0.0.1:8000/api`
+
+*<b>NOTE</b>*
+
+Le serveur de l'API et la base de données mettent entre <b>2 minutes</b> et <b>5 minutes</b> pour se connecter. 

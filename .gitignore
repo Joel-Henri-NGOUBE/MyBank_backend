@@ -9,6 +9,7 @@
 /vendor/
 ###< symfony/framework-bundle ###
 /migrations/*.php
+/symfony_api
 
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem

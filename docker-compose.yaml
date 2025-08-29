@@ -1,18 +1,29 @@
 services:
+# Lancer le service mysql
   mysql:
     image: mysql:8.0.43-debian
     restart: always
+    # Déclaration des variables d'environnement du container
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: true
       MYSQL_DATABASE: symfony_api
       MYSQL_PORT: 3306
+    # Déclaration des ports du container
     ports:
       - 3306:3306
+    # Définir un enregistrement des données de la base de données
+    volumes:
+      - ./symfony_api:/var/lib/mysql/
 
+# Lancer le service symfony
   symfony-api:
     build: .
+    # Déclaration des ports du container
     ports:
       - 8000:8000
     restart: always
     depends_on:
       - mysql
+
+volumes:
+  symfony_api:
